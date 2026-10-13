@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Blu's Game Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: engineering-paper planner. One column on phones, sticky header with tabs, content cards on a faint grid. */
+:root{
+  --paper:#f6f8f4; --grid:#dfe8dc; --ink:#1d2a24; --pencil:#5b6a62; --faint:#8a978f;
+  --card:#ffffff; --line:#d7e0d4; --accent:#1f6b4f; --accent-ink:#ffffff;
+  --qt-bg:#e5f1df; --qt-fg:#2c5512;
+  --class-bg:#e3eefb; --class-fg:#0e3f72;
+  --hw-bg:#fbe9e2; --hw-fg:#7a2d12;
+  --study-bg:#ecebfd; --study-fg:#3a3288;
+  --open-bg:#fbe8f0; --open-fg:#74213f;
+  --ex-bg:#fbe4e4; --ex-fg:#7f1d1d;
+  --church-bg:#dff3ec; --church-fg:#0a4d3f;
+  --car-bg:#faefd8; --car-fg:#5e3704;
+  --me-bg:#eef1ec; --me-fg:#55625a;
+  --warn:#9a3412; --good:#166534;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111714; --grid:#1b2420; --ink:#e6eee8; --pencil:#a9b8ae; --faint:#7d8c83;
+  --card:#18201c; --line:#29352f; --accent:#5cc49a; --accent-ink:#06261a;
+  --qt-bg:#203317; --qt-fg:#c4e3a6; --class-bg:#122a44; --class-fg:#b9d6f6;
+  --hw-bg:#3d2016; --hw-fg:#f6c3ad; --study-bg:#262250; --study-fg:#cfcbf7;
+  --open-bg:#3b1a29; --open-fg:#f3c0d4; --ex-bg:#3f1818; --ex-fg:#f6bcbc;
+  --church-bg:#0f3129; --church-fg:#a6e3cf; --car-bg:#3a2a0d; --car-fg:#f5d39a;
+  --me-bg:#1f2824; --me-fg:#a9b8ae; --warn:#fdba74; --good:#86efac; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111714; --grid:#1b2420; --ink:#e6eee8; --pencil:#a9b8ae; --faint:#7d8c83;
+  --card:#18201c; --line:#29352f; --accent:#5cc49a; --accent-ink:#06261a;
+  --qt-bg:#203317; --qt-fg:#c4e3a6; --class-bg:#122a44; --class-fg:#b9d6f6;
+  --hw-bg:#3d2016; --hw-fg:#f6c3ad; --study-bg:#262250; --study-fg:#cfcbf7;
+  --open-bg:#3b1a29; --open-fg:#f3c0d4; --ex-bg:#3f1818; --ex-fg:#f6bcbc;
+  --church-bg:#0f3129; --church-fg:#a6e3cf; --car-bg:#3a2a0d; --car-fg:#f5d39a;
+  --me-bg:#1f2824; --me-fg:#a9b8ae; --warn:#fdba74; --good:#86efac; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+section{scroll-margin-top:120px}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:20px 20px;color:var(--ink);font:16px/1.5 var(--f-body);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:0 40px}
+header.top{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{padding-block:14px 0}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font:800 26px/1.1 var(--f-display);letter-spacing:-0.01em;margin:0}
+.today-line{font:600 13px var(--f-mono);color:var(--pencil)}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;margin-top:12px;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:none;text-decoration:none;color:var(--pencil);font:600 14px var(--f-body);padding:8px 12px;border-bottom:3px solid transparent}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section{display:grid;gap:16px;padding-top:18px}
+h2{font:700 19px/1.2 var(--f-display);margin:0;text-wrap:balance}
+h3{font:700 16px/1.25 var(--f-display);margin:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.muted{color:var(--pencil)}
+.small{font-size:14px}
+.label{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.mode{display:inline-flex;align-items:center;gap:8px;font:600 13px var(--f-body);padding:4px 10px;border-radius:999px}
+.mode.normal{background:var(--qt-bg);color:var(--qt-fg)}
+.mode.exam{background:var(--ex-bg);color:var(--ex-fg)}
+.hero{display:grid;gap:10px}
+.countdown{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.countdown .n{font:800 44px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.countdown .u{font:600 15px var(--f-body);color:var(--pencil)}
+.daynav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.daynav button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 12px;font:600 14px var(--f-body);cursor:pointer}
+.daynav .d{font:700 17px var(--f-display);text-align:center}
+.blocks{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.blk{display:grid;grid-template-columns:96px 1fr auto;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;min-width:0}
+.blk .t{font:600 12px var(--f-mono);font-variant-numeric:tabular-nums;opacity:.85}
+.blk .w{font-weight:600;min-width:0}
+.blk.now{outline:2px solid var(--accent);outline-offset:1px}
+.blk.done .w{text-decoration:line-through;opacity:.65}
+.nowtag{display:inline-block;margin-left:6px;font:700 10px var(--f-mono);letter-spacing:.06em;background:var(--accent);color:var(--accent-ink);padding:1px 6px;border-radius:4px;vertical-align:2px}
+.chk{width:22px;height:22px;accent-color:var(--accent);cursor:pointer;margin:0}
+.c-qt{background:var(--qt-bg);color:var(--qt-fg)} .c-class{background:var(--class-bg);color:var(--class-fg)}
+.c-hw{background:var(--hw-bg);color:var(--hw-fg)} .c-study{background:var(--study-bg);color:var(--study-fg)}
+.c-open{background:var(--open-bg);color:var(--open-fg)} .c-ex{background:var(--ex-bg);color:var(--ex-fg)}
+.c-church{background:var(--church-bg);color:var(--church-fg)} .c-car{background:var(--car-bg);color:var(--car-fg)}
+.c-me{background:var(--me-bg);color:var(--me-fg)}
+.dl{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.dl li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.dl li:first-child{border-top:0}
+.dl li.step{grid-template-columns:1fr auto}
+.dl .when{font:600 12px var(--f-mono);color:var(--pencil);min-width:74px;font-variant-numeric:tabular-nums;padding-top:3px}
+.dl .what{min-width:0}
+.dl .what b{font-weight:600}
+.dl .cls{font:600 12px var(--f-body);color:var(--pencil)}
+.dl li.past{opacity:.55}
+.dl li.isexam .what b{color:var(--ex-fg)}
+.tag{display:inline-block;font:700 10px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;margin-left:6px;vertical-align:2px}
+.tag.exam{background:var(--ex-bg);color:var(--ex-fg)}
+.tag.late{background:var(--hw-bg);color:var(--warn)}
+.done-txt{text-decoration:line-through;opacity:.6}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--pencil);font:600 14px var(--f-body);padding:7px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.gridwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.wk{display:grid;grid-template-columns:38px repeat(7,minmax(78px,1fr));column-gap:3px;font-size:11px;line-height:1.2;min-width:620px}
+.wk .hd{text-align:center;font:700 12px var(--f-display);padding:4px 0}
+.wk .hd.today{color:var(--accent)}
+.wk .tm{font:600 10px var(--f-mono);color:var(--faint);text-align:right;padding-right:4px;transform:translateY(-6px)}
+.wk .bk{border-radius:4px;padding:2px 4px;overflow:hidden;margin:1px 0;font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+.legend span{font:600 12px var(--f-body);padding:3px 8px;border-radius:6px}
+.classes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.cl{display:grid;gap:8px;align-content:start}
+.cl .row{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.cl .row span:first-child{color:var(--pencil)}
+.cl .now-grade{font:800 28px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.status{display:inline-block;font:600 12px var(--f-body);padding:2px 8px;border-radius:999px}
+.st-bad{background:var(--ex-bg);color:var(--ex-fg)} .st-mid{background:var(--car-bg);color:var(--car-fg)} .st-ok{background:var(--qt-bg);color:var(--qt-fg)}
+.rules{margin:0;padding-left:20px;display:grid;gap:6px}
+.exams{display:grid;gap:12px}
+.ex{display:grid;gap:6px}
+.ex .meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--pencil)}
+.ex .meta b{color:var(--ink);font-weight:600}
+.sync{font:600 12px var(--f-mono);color:var(--faint)}
+.progress{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);width:0}
+@media (max-width:480px){.blk{grid-template-columns:78px 1fr auto}.countdown .n{font-size:38px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Blu's Game Plan</h1>
+      <span class="today-line" id="todayLine"></span>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#today" data-tab="today">Today</a>
+      <a href="#week" data-tab="week">Week</a>
+      <a href="#deadlines" data-tab="deadlines">Deadlines</a>
+      <a href="#classes" data-tab="classes">Classes</a>
+      <a href="#exams" data-tab="exams">Exam prep</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="today" aria-labelledby="h-today">
+    <h2 id="h-today" class="sr" hidden>Today</h2>
+    <div class="card hero" id="hero"></div>
+    <div class="card">
+      <div class="daynav">
+        <button type="button" id="prevDay" aria-label="Previous day">Prev</button>
+        <div class="d" id="dayTitle"></div>
+        <button type="button" id="nextDay" aria-label="Next day">Next</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px 0 10px;flex-wrap:wrap">
+        <span id="dayMode"></span>
+        <span class="small muted" id="dayProgressTxt"></span>
+      </div>
+      <div class="progress" aria-hidden="true"><i id="dayProgress"></i></div>
+      <ul class="blocks" id="dayBlocks" style="margin-top:12px"></ul>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+        <h3>Due in the next 7 days</h3>
+        <a href="#deadlines" class="small" style="color:var(--accent)">All deadlines</a>
+      </div>
+      <ul class="dl" id="dueSoon" style="margin-top:6px"></ul>
+    </div>
+    <p class="sync" id="syncLine"></p>
+  </section>
+
+  <section id="week" aria-labelledby="h-week" hidden>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <h2 id="h-week">Weekly schedule</h2>
+      <div class="seg" role="group" aria-label="Schedule type">
+        <button type="button" id="segNormal" aria-pressed="true">Normal week</button>
+        <button type="button" id="segExam" aria-pressed="false">Exam week</button>
+      </div>
+    </div>
+    <p class="small muted" id="weekNote" style="margin:0"></p>
+    <div class="card gridwrap"><div class="wk" id="weekGrid"></div></div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section id="deadlines" aria-labelledby="h-dl" hidden>
+    <h2 id="h-dl">Every deadline through Dec 14</h2>
+    <p class="small muted" style="margin:0">Anything due Sunday or Monday is listed on the Saturday it must be submitted by 2pm. Tick items off as they are turned in.</p>
+    <div class="card"><ul class="dl" id="allDeadlines"></ul></div>
+  </section>
+
+  <section id="classes" aria-labelledby="h-cl" hidden>
+    <h2 id="h-cl">Where each class stands</h2>
+    <div class="classes" id="classCards"></div>
+    <div class="card">
+      <h3>House rules</h3>
+      <ol class="rules small" style="margin-top:10px">
+        <li><b>Sunday deadlines are Saturday deadlines.</b> Anything due Sunday or Monday is submitted by Saturday at 2pm.</li>
+        <li><b>Never turn anything in late.</b> Thermo gives a zero. Strength takes 25% off and Dynamics 20% off, and neither accepts work more than 24 hours late.</li>
+        <li><b>Never miss Thermo.</b> Quizzes are unannounced and there are no makeups.</li>
+        <li><b>6 to 8am is quiet time.</b> Homework stays out of the mornings.</li>
+        <li><b>A missed block moves, it does not disappear.</b> Make it up in the next open slot that week.</li>
+        <li><b>Normal weeks build the buffer.</b> Open slots go to next week's homework, so exam weeks are free for exam prep.</li>
+        <li><b>Protect sleep before exams.</b> In bed by midnight the night before any exam.</li>
+        <li><b>Check every rubric.</b> Strength and Dynamics reject handwritten work in pen, on plain paper, without a title page, or with the wrong file name.</li>
+        <li><b>Do both course evaluations.</b> Dynamics and Strength each add up to 2%.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="exams" aria-labelledby="h-ex" hidden>
+    <h2 id="h-ex">Exam prep</h2>
+    <p class="small muted" style="margin:0">Prep starts 10 to 14 days out, and Saturday 9am to 2pm always goes to the next exam. The rule for every calculation class: solve from a blank page, peek at one step only when stuck, then finish alone. The point is learning how to think through the problem, not copying a solution.</p>
+    <h3>How to study each class</h3>
+    <div class="classes" id="methodCards"></div>
+    <div class="card ex">
+      <h3>Make new practice problems</h3>
+      <p class="small" style="margin:0">After finishing the class problems, paste one into Claude with this prompt to get fresh versions of the same idea.</p>
+      <pre id="promptText" style="white-space:pre-wrap;font:13px/1.5 var(--f-mono);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px;margin:0;overflow-x:auto"></pre>
+      <div><button type="button" id="copyPrompt" style="background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:8px 14px;font:600 14px var(--f-body);cursor:pointer">Copy prompt</button> <span class="small muted" id="copyMsg"></span></div>
+    </div>
+    <h3>Exam by exam</h3>
+    <div class="exams" id="examCards"></div>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- Data ---------- */
+var CAT={qt:"Quiet time",class:"Class",hw:"Homework",study:"Study",open:"Open: get ahead on HW",ex:"Exam prep",church:"Church",car:"Driving (work in car)",me:"Lunch, travel, sleep"};
+var CHECKABLE={hw:1,study:1,ex:1,open:1};
+
+var NORMAL={
+Mon:[[6,8,"qt","Quiet time"],[8,9,"study","Study Dynamics: rework class examples"],[9,10,"study","Thermo: review last lecture"],[10,11.5,"class","Thermo"],[11.5,14,"class","Dynamics"],[14,16,"hw","Thermo HW"],[16,17,"class","Ethics (Teams)"],[17,18,"study","Dynamics practice problems"],[18,20,"hw","Strength MecMovies"],[20,22,"church","Church meetings"],[22,23,"study","Dynamics practice problems"],[23,24.5,"study","Ethics HW or group work"],[24.5,25,"me","Lights out by 12:30"]],
+Tue:[[6,8,"qt","Quiet time"],[8,8.5,"me","To campus"],[8.5,11,"class","Strength of Materials"],[11,12,"me","Lunch"],[12,13,"hw","Lab report"],[13,15,"car","Drive to SAM: finish lab report"],[15,16,"hw","Pre-lab"],[16,18,"study","Dynamics practice problems"],[18,20,"open","Open: get ahead on next week's HW"],[20,22,"study","Strength problems, formula sheet"],[22,24,"study","Thermo practice; plan tomorrow"],[24,25,"me","Sleep at SAM"]],
+Wed:[[6,8,"qt","Quiet time"],[8,9,"study","Study Dynamics: review lecture"],[9,10,"study","Thermo: review last lecture"],[10,11.5,"class","Thermo"],[11.5,14,"class","Dynamics"],[14,16,"hw","Dynamics HW"],[16,17,"study","Study Strength"],[17,19,"car","Drive to SAM: Strength recorded lectures"],[19,20,"study","Ethics reading"],[20,23,"church","SAM interaction"],[23,25,"car","Drive home, sleep"]],
+Thu:[[6,8,"qt","Quiet time"],[8,8.5,"me","To campus"],[8.5,11,"class","Strength of Materials"],[11,13,"hw","Strength HWA (eat while working)"],[13,16,"class","Strength Lab"],[16,17,"study","Review Dynamics ICA notes"],[17,19,"car","Drive: Thermo flashcards"],[19,20,"study","Light review"],[20,23,"church","Outreach"],[23,24,"open","Open: get ahead on HW"],[24,25,"me","Lights out by 1"]],
+Fri:[[6,8,"qt","Quiet time"],[8,10,"study","Thermo exam-style problems"],[10,12,"study","Strength practice problems"],[12,13,"me","Lunch"],[13,15,"church","Leave 1pm, service"],[15,17,"hw","Dynamics lab lesson"],[17,25,"church","Service"]],
+Sat:[[6,9,"me","Sleep in"],[9,12,"study","Study for the next exam"],[12,14,"hw","Submit everything due Sun or Mon; plan next week"],[14,24,"church","First timers, mobilization, prayer"],[24,25,"me","Sleep"]],
+Sun:[[6,25,"church","Church. Fully off from school."]]};
+
+var EXAMWK={
+Mon:[[6,8,"qt","Quiet time"],[8,9,"ex","Exam prep"],[9,10,"study","Thermo: review last lecture"],[10,11.5,"class","Thermo"],[11.5,14,"class","Dynamics"],[14,16,"ex","HW due this week, then exam prep"],[16,17,"class","Ethics (Teams)"],[17,18,"ex","Exam prep"],[18,20,"ex","HW due this week, then exam prep"],[20,22,"church","Church meetings"],[22,24.5,"ex","Exam prep"],[24.5,25,"me","Lights out by 12:30"]],
+Tue:[[6,8,"qt","Quiet time"],[8,8.5,"me","To campus"],[8.5,11,"class","Strength of Materials"],[11,12,"me","Lunch"],[12,13,"hw","Lab report"],[13,15,"car","Drive to SAM: finish lab report"],[15,16,"hw","Pre-lab"],[16,24,"ex","Exam prep"],[24,25,"me","Sleep at SAM"]],
+Wed:[[6,8,"qt","Quiet time"],[8,9,"ex","Exam prep"],[9,10,"study","Thermo: review last lecture"],[10,11.5,"class","Thermo"],[11.5,14,"class","Dynamics"],[14,16,"ex","HW due this week, then exam prep"],[16,17,"ex","Exam prep"],[17,19,"car","Drive: flashcards, formula sheet"],[19,20,"ex","Exam prep"],[20,23,"church","SAM interaction"],[23,25,"car","Drive home, sleep"]],
+Thu:[[6,8,"qt","Quiet time"],[8,8.5,"me","To campus"],[8.5,11,"class","Strength of Materials"],[11,13,"ex","HW due this week, then exam prep"],[13,16,"class","Strength Lab"],[16,17,"ex","Exam prep"],[17,19,"car","Drive: flashcards"],[19,20,"ex","Exam prep"],[20,23,"church","Outreach"],[23,24,"ex","Light review"],[24,25,"me","Lights out by 1"]],
+Fri:[[6,8,"qt","Quiet time"],[8,12,"ex","Exam prep"],[12,13,"me","Lunch"],[13,15,"church","Leave 1pm, service"],[15,17,"ex","HW due this week, then exam prep"],[17,25,"church","Service"]],
+Sat:[[6,9,"me","Sleep in"],[9,14,"ex","Exam prep (submit due work first)"],[14,24,"church","First timers, mobilization, prayer"],[24,25,"me","Sleep"]],
+Sun:[[6,25,"church","Church. Fully off from school."]]};
+
+/* How each class should be studied, from where its exam questions actually come from. */
+var METHODS={
+ thermo:{cls:"Applied Thermo",sources:["Canvas tutorials: one core worked problem per chapter","Homework problems (pulled from the textbook)","Old exams: check Canvas, or get one from a classmate"],
+  steps:["Read each chapter's tutorial, then close it and redo the problem from a blank page.","Rework every homework problem on the exam without notes.","Take one old exam timed, with only the FE-approved calculator.","Redo every problem you missed until you can do it cold."],
+  watch:"Every exam needs 50%+ to pass the course. No make-up exams. Only FE-approved calculators."},
+ strength:{cls:"Strength of Materials",sources:["In-class lecture problems (recorded on Teams)","Handwritten homework (HWA) problems, often reworded to ask for a different unknown","MecMovies: practice only, rarely on the exam"],
+  steps:["Pull the hardest in-class and HWA problems from each chapter into one list.","Solve each from a blank page. Stuck? Look only at the next step, then close the solution and keep going.","Flip the variable: re-solve each problem for a different unknown, because that's how he rewrites them.","Build the formula sheet as you go. It's allowed in the exam."],
+  watch:"Exams are 85% of the grade. He gives no extra work to make up a bad exam."},
+ dynamics:{cls:"Dynamics",sources:["In-class problems: Test 1 was taken straight from them","Homework: extra practice on the same ideas"],
+  steps:["Rework every in-class problem from the chapters on the exam, from a blank page.","Stuck? Look only at the next step, then close it and finish alone.","For every problem type, do 2 or 3 new versions (use the prompt below) until the approach is automatic.","Finish with one timed mixed set of problems."],
+  watch:"If she solves it in class, expect it on the test. Skipping the final is an automatic F."}
+};
+
+/* Exams that switch the schedule to exam week (7 days before through exam day). Steps: [start, end, task]. */
+var EXAMS=[
+ {id:"thm2",date:"2026-10-28",cls:"Applied Thermo",method:"thermo",name:"Midterm II",aim:"70%+ (50% minimum to pass)",prep:"2026-10-19",sats:"Oct 24",weight:"20% of grade",
+  topics:"Chapters covered since Midterm I. Confirm the list with Dr. Mohan in class.",
+  steps:[["2026-10-19","2026-10-22","Tutorials: redo each chapter's core problem from a blank page"],["2026-10-23","2026-10-24","Rework every homework problem on these chapters without notes"],["2026-10-26","2026-10-27","One old exam, timed. Redo every miss. In bed by midnight Tuesday"]]},
+ {id:"dyn2",date:"2026-11-09",cls:"Dynamics",method:"dynamics",name:"Midterm 2 (Ch 15 to 17)",aim:"80%",prep:"2026-10-26",sats:"Oct 31, Nov 7",weight:"9.75% of grade",
+  topics:"From the lecture outline: impulse and momentum, impact, angular momentum, rigid-body rotation about a fixed axis, relative velocity and acceleration, rotating axes, moment of inertia, equations of motion for translation and rotation.",
+  steps:[["2026-10-26","2026-10-31","Rework every in-class problem on impulse, momentum and impact (Ch 15)"],["2026-11-01","2026-11-04","Rework in-class problems on rigid-body kinematics and kinetics (Ch 16 and 17); attend the Nov 4 review"],["2026-11-05","2026-11-07","New versions of every problem type you missed; Saturday: one timed mixed set"],["2026-11-09","2026-11-09","Morning: formulas and two warm-up problems only"]]},
+ {id:"str2",date:"2026-11-17",cls:"Strength of Materials",method:"strength",name:"Midterm 2 (Ch 6 to 9)",aim:"80%",prep:"2026-11-02",sats:"Nov 14",weight:"35% of grade",
+  topics:"Torsion (Ch 6), equilibrium of beams (Ch 7), flexure stress in bending (Ch 8), shear stress in beams (Ch 9).",
+  steps:[["2026-11-02","2026-11-07","List the hardest in-class and HWA problems from Ch 6 to 9; rewatch any lecture you missed on Teams"],["2026-11-09","2026-11-13","Solve each blind with the one-step peek rule, then flip the variable"],["2026-11-14","2026-11-14","Timed mixed set; finish the formula sheet"],["2026-11-16","2026-11-16","Check the formula sheet, light review, in bed by midnight"]]},
+ {id:"thm3",date:"2026-12-02",cls:"Applied Thermo",method:"thermo",name:"Midterm III",aim:"70%+ (50% minimum to pass)",prep:"2026-11-19",sats:"Nov 21, Thanksgiving break",weight:"20% of grade",
+  topics:"Chapters covered since Midterm II. Confirm the list with Dr. Mohan in class.",
+  steps:[["2026-11-19","2026-11-24","Tutorials: redo each chapter's core problem from a blank page"],["2026-11-25","2026-11-28","Thanksgiving break: rework every homework problem without notes"],["2026-11-30","2026-12-01","One old exam, timed. Redo every miss"]]},
+ {id:"labf",date:"2026-12-03",cls:"Strength Lab",method:null,name:"Final exam",aim:"85%",prep:"2026-11-30",sats:"none",weight:"10% of grade",
+  topics:"The experiments run this semester: torsion, thin cylinder, Charpy impact, strain gauges, Euler buckling, unsymmetrical cantilever, tensile test.",
+  steps:[["2026-11-30","2026-12-02","For each lab report: the objective, the key equations, the main result and the sources of error"]]},
+ {id:"dynf",date:"2026-12-07",cls:"Dynamics",method:"dynamics",name:"Final",aim:"80%",prep:"2026-11-21",sats:"Nov 28, Dec 5",weight:"22.75% of grade",
+  topics:"Confirm coverage at the Nov 30 and Dec 2 review sessions. Later topics: rigid-body work and energy, impulse and momentum, vibrations.",
+  steps:[["2026-11-21","2026-11-28","Rework every in-class problem since Midterm 2"],["2026-11-30","2026-12-02","Attend both review sessions; write down every problem she works"],["2026-12-03","2026-12-05","New versions of weak problem types; Saturday: timed mixed set from the whole semester"],["2026-12-07","2026-12-07","Morning: formulas and two warm-up problems only"]]},
+ {id:"ethf",date:"2026-12-07",cls:"Ethics",method:null,name:"Final exam (LockDown, open 9am to midnight)",aim:"90%",prep:"2026-12-03",sats:"none",weight:"30% of grade",
+  topics:"Comprehensive: the engineering code of ethics, ethical virtues and theories, moral reasoning, safety and risk, rights of engineers, and the case studies presented in class.",
+  steps:[["2026-12-03","2026-12-06","Review the code of ethics canons and one line on each case study presented"],["2026-12-07","2026-12-07","Take it in the evening, after the Dynamics final"]]},
+ {id:"strf",date:"2026-12-14",cls:"Strength of Materials",method:"strength",name:"Final, 10am to 12pm",aim:"80%",prep:"2026-12-03",sats:"Dec 12",weight:"35% of grade",
+  topics:"Comprehensive, focused on stress transformations and Mohr's circle (Ch 12) and strain transformations and rosettes (Ch 13).",
+  steps:[["2026-12-03","2026-12-07","Fit in Ch 12 and 13 in-class problems around the other finals"],["2026-12-08","2026-12-11","Solve blind and flip the variable on Ch 12 and 13; one problem from each earlier chapter daily"],["2026-12-12","2026-12-12","Timed mixed set; update the formula sheet"],["2026-12-14","2026-12-14","Morning: formula sheet and two warm-up problems only (in bed by midnight Sunday)"]]}
+];
+
+var PRACTICE_PROMPT="I'm studying for my [CLASS] exam. Here is a problem my professor worked in class:\n\n[PASTE THE PROBLEM]\n\nWrite 3 new problems that test the same idea. Change the numbers in all of them, ask for a different unknown in at least one, and change the setup a little in another. Don't show the solutions yet. When I send my answers, check each one step by step and show me exactly where my thinking went wrong.";
+
+/* Deadlines. date = the day it must be done by. exam:true marks an exam. */
+var DEADLINES=[
+ ["2026-10-13","str1","Strength","Midterm 1 (Ch 1 to 5)","15% of grade",true],
+ ["2026-10-14","thmhw4","Thermo","HW_04 by 11:59pm","Late = zero"],
+ ["2026-10-14","lab3email","Strength Lab","Email Dr. Al Ibadi (aalibadi@uh.edu) to make up Lab 3 at the Nov 12 session","Biggest fix for the lab grade"],
+ ["2026-10-14","labcomments","Strength Lab","Read instructor comments on Lab 1 and Lab 2","Stop losing the same points"],
+ ["2026-10-15","lockdown","Ethics","Install and test Respondus LockDown Browser","Before Friday's quiz"],
+ ["2026-10-15","afrin","Dynamics","Ask Dr. Afrin about Lab Lesson 2 and the missing ICA-9 score",""],
+ ["2026-10-15","lab07","Strength Lab","Lab 07 Euler Buckling 2","Reports due at the start of the next lab"],
+ ["2026-10-16","ethq1","Ethics","Quiz 1 by 10pm (LockDown Browser)",""],
+ ["2026-10-17","wk42","Strength, Dynamics","Strength HWA Chp 6, Strength MEC Chp 7, Dynamics Lab Lesson 5","Really due Oct 18 and 19"],
+ ["2026-10-21","dynprop","Dynamics","Design project proposal: email the TA",""],
+ ["2026-10-24","hwa7","Strength","HWA Chp 7","Really due Oct 25"],
+ ["2026-10-28","thm2","Thermo","Midterm II","20%; need 50%+",true],
+ ["2026-10-28","mec8","Strength","MEC Chp 8",""],
+ ["2026-10-31","mec9","Strength","MEC Chp 9","Really due Nov 2"],
+ ["2026-11-02","ethpres","Ethics","Final presentations start (Mondays Nov 2 to 23)","Group work plus peer evaluation"],
+ ["2026-11-07","hwa89","Strength","HWA Chp 8 and Chp 9","Really due Nov 8"],
+ ["2026-11-09","dyn2","Dynamics","Midterm 2 (Ch 15 to 17)","Checkpoint before the W date",true],
+ ["2026-11-12","labmake","Strength Lab","Make-up experiments","Target for Lab 3"],
+ ["2026-11-17","str2","Strength","Midterm 2 (Ch 6 to 9)","35% of grade",true],
+ ["2026-11-18","wdate","All classes","Last day to withdraw with a W",""],
+ ["2026-11-18","mec12","Strength","MEC Chp 12",""],
+ ["2026-11-19","labpres","Strength Lab","Final presentation","10% of grade"],
+ ["2026-11-21","hwa12","Strength","HWA Chp 12","Really due Nov 22"],
+ ["2026-11-25","thanks","All classes","Thanksgiving break (Nov 25 to 28)","Catch up and start final prep"],
+ ["2026-12-02","thm3","Thermo","Midterm III","20%; need 50%+",true],
+ ["2026-12-02","mec13","Strength","MEC Chp 13",""],
+ ["2026-12-03","labf","Strength Lab","Final exam","10% of grade",true],
+ ["2026-12-07","dynf","Dynamics","Final","Skipping it = automatic F",true],
+ ["2026-12-07","ethf","Ethics","Final exam, open 9am to midnight","Take it after Dynamics",true],
+ ["2026-12-08","hwa13","Strength","HWA Chp 13",""],
+ ["2026-12-14","strf","Strength","Final, 10am to 12pm","Comprehensive, focus Ch 12 and 13",true]
+];
+
+var CLASSES=[
+ {name:"Dynamics",code:"MECT3358",now:"60.8%",status:["Needs the most work","st-bad"],goal:"B- (80%) or better",takes:"ICAs and HW at 100%, lab average 85%, Midterm 2 and Final average 70% (79% for a B)",lever:"Every lab 90%+. The course survey adds 2%."},
+ {name:"Strength Lab",code:"MECT3155",now:"~72%",status:["At risk","st-bad"],goal:"B (83%)",takes:"Lab 3 made up for 70%+ and every remaining report 90%+",lever:"Reports are 70% of the grade. Canvas shows 87% but the syllabus weights put it near 72%."},
+ {name:"Strength of Materials",code:"MECT3355",now:"B",status:["Exams decide it","st-mid"],goal:"B (80%)",takes:"Midterm 2 and Final average 76% to 80%, depending on Midterm 1",lever:"Exams are 85% of the grade. Build the formula sheet. The course evaluation adds 2%."},
+ {name:"Applied Thermo",code:"MECT3331",now:"75.7%",status:["B now","st-ok"],goal:"Stay a B (75%+)",takes:"HW and quizzes near 90%, Midterms II and III average 65%+, never under 50% on any exam",lever:"Never miss class (pop quizzes). Never turn HW in late (zero)."},
+ {name:"Ethics",code:"MECT4188",now:"90%",status:["On track for A-","st-ok"],goal:"A- (90%)",takes:"About 90% on everything left",lever:"Attendance and pulling weight in the group presentations."}
+];
+
+/* ---------- Dates ---------- */
+var DAYKEYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+var DAYNAMES=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function parse(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+function addDays(d,n){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);return x;}
+function dayDiff(a,b){return Math.round((parse(iso(b))-parse(iso(a)))/86400000);}
+function short(d){return DAYKEYS[d.getDay()]+" "+MONTHS[d.getMonth()]+" "+d.getDate();}
+function fmtH(h){var hh=Math.floor(h)%24,m=Math.round((h-Math.floor(h))*60),ap=hh<12?"am":"pm",h12=hh%12===0?12:hh%12;return h12+(m?":"+String(m).padStart(2,"0"):"")+ap;}
+function fmtRange(a,b){return fmtH(a)+" to "+fmtH(b);}
+
+function now(){return new Date();}
+function logicalToday(){var n=now();return n.getHours()<4?addDays(n,-1):new Date(n.getFullYear(),n.getMonth(),n.getDate());}
+
+function examFor(date){
+  var best=null;
+  EXAMS.forEach(function(e){var dd=dayDiff(date,parse(e.date));if(dd>=0&&dd<=7){if(!best||dd<best.dd)best={e:e,dd:dd};}});
+  return best;
+}
+function nextExam(date){
+  var up=EXAMS.filter(function(e){return dayDiff(date,parse(e.date))>=0;}).sort(function(a,b){return a.date<b.date?-1:1;});
+  return up[0]||null;
+}
+
+/* ---------- Check-off store (Supabase if configured, else device) ---------- */
+var CFG=window.BLU_CONFIG||{};
+var REMOTE=!!(CFG.supabaseUrl&&CFG.supabaseAnonKey);
+var checks={};
+var syncState=REMOTE?"Connecting":"Saved on this device";
+var LS="blu-checks-v1";
+function lsRead(){try{return JSON.parse(localStorage.getItem(LS)||"{}")}catch(e){return{}}}
+function lsWrite(){try{localStorage.setItem(LS,JSON.stringify(checks))}catch(e){}}
+function headers(){return{"apikey":CFG.supabaseAnonKey,"Authorization":"Bearer "+CFG.supabaseAnonKey,"Content-Type":"application/json"};}
+function base(){return CFG.supabaseUrl.replace(/\/+$/,"")+"/rest/v1/checks";}
+function load(){
+  if(!REMOTE){checks=lsRead();render();return;}
+  fetch(base()+"?select=id,done",{headers:headers()}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();}).then(function(rows){
+    var m={};rows.forEach(function(r){if(r.done)m[r.id]=true;});checks=m;lsWrite();syncState="Synced "+fmtClock(now());render();
+  }).catch(function(){checks=lsRead();syncState="Offline. Showing the last saved check-offs.";render();});
+}
+function fmtClock(d){var h=d.getHours(),m=d.getMinutes();return (h%12||12)+":"+String(m).padStart(2,"0")+(h<12?"am":"pm");}
+function setCheck(id,done){
+  if(done)checks[id]=true;else delete checks[id];
+  lsWrite();render();
+  if(!REMOTE)return;
+  fetch(base(),{method:"POST",headers:Object.assign(headers(),{"Prefer":"resolution=merge-duplicates,return=minimal"}),body:JSON.stringify([{id:id,done:!!done,updated_at:new Date().toISOString()}])})
+  .then(function(r){if(!r.ok)throw new Error(r.status);syncState="Synced "+fmtClock(now());renderSync();})
+  .catch(function(){syncState="Couldn't save that check-off. It will retry on the next refresh.";renderSync();});
+}
+function isDone(id){return !!checks[id];}
+
+/* ---------- Rendering ---------- */
+var viewDate=logicalToday();
+var weekMode=null;
+function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+
+function renderHeader(){
+  var t=logicalToday();
+  document.getElementById("todayLine").textContent=DAYNAMES[t.getDay()]+", "+MONTHS[t.getMonth()]+" "+t.getDate();
+}
+
+function renderHero(){
+  var t=logicalToday(),hero=document.getElementById("hero");hero.textContent="";
+  var ef=examFor(t),ne=nextExam(t);
+  var lab=el("div","label",ef?"Exam week":"Normal week");hero.appendChild(lab);
+  if(ne){
+    var dd=dayDiff(t,parse(ne.date));
+    var c=el("div","countdown");
+    c.appendChild(el("span","n",dd===0?"Today":String(dd)));
+    c.appendChild(el("span","u",dd===0?"":dd===1?"day until":"days until"));
+    hero.appendChild(c);
+    var h=el("h2",null,ne.cls+" "+ne.name);hero.appendChild(h);
+    var p=el("p","small muted",short(parse(ne.date))+" · aim for "+ne.aim+" · "+ne.weight);p.style.margin="0";hero.appendChild(p);
+  }else{hero.appendChild(el("h2",null,"Semester complete"));}
+  var ts=todaysSteps(t);
+  if(ts.length){
+    hero.appendChild(el("div","label","Today's exam prep focus"));
+    var ul=el("ul","dl");ts.forEach(function(x){var i=+x.id.split(":")[2];ul.appendChild(stepRow(x.e,x.s,i,x.e.cls+" "+x.e.name.split(" (")[0]));});hero.appendChild(ul);
+  }
+}
+
+function blocksFor(d){var ef=examFor(d);var src=ef?EXAMWK:NORMAL;return {list:src[DAYKEYS[d.getDay()]],exam:ef};}
+
+function renderDay(){
+  var d=viewDate,info=blocksFor(d),t=logicalToday();
+  var isToday=iso(d)===iso(t);
+  document.getElementById("dayTitle").textContent=(isToday?"Today, ":"")+DAYNAMES[d.getDay()]+" "+MONTHS[d.getMonth()]+" "+d.getDate();
+  var mode=document.getElementById("dayMode");mode.textContent="";
+  var pill=el("span","mode "+(info.exam?"exam":"normal"),info.exam?("Exam week: "+info.exam.e.cls+" "+info.exam.e.name.split(" (")[0]+(info.exam.dd===0?" today":" in "+info.exam.dd+(info.exam.dd===1?" day":" days"))):"Normal week");
+  mode.appendChild(pill);
+  var ul=document.getElementById("dayBlocks");ul.textContent="";
+  var n=now(),nowH=n.getHours()+n.getMinutes()/60;if(nowH<4)nowH+=24;
+  var total=0,done=0;
+  info.list.forEach(function(b){
+    var li=el("li","blk c-"+b[2]);
+    var id="b:"+iso(d)+":"+b[0];
+    var checkable=!!CHECKABLE[b[2]];
+    if(isToday&&nowH>=b[0]&&nowH<b[1])li.classList.add("now");
+    li.appendChild(el("span","t",fmtRange(b[0],b[1])));
+    var w=el("span","w",b[3]);
+    if(li.classList.contains("now")){w.appendChild(el("span","nowtag","NOW"));}
+    li.appendChild(w);
+    if(checkable){
+      total++;if(isDone(id)){done++;li.classList.add("done");}
+      var cb=document.createElement("input");cb.type="checkbox";cb.className="chk";cb.id="cb-"+id.replace(/[^a-z0-9]/gi,"-");cb.checked=isDone(id);
+      cb.setAttribute("aria-label","Mark done: "+b[3]);
+      cb.addEventListener("change",function(){setCheck(id,cb.checked);});
+      li.appendChild(cb);
+    }else{li.appendChild(el("span"));}
+    ul.appendChild(li);
+  });
+  document.getElementById("dayProgressTxt").textContent=total?(done+" of "+total+" work blocks done"):"No work blocks";
+  document.getElementById("dayProgress").style.width=(total?Math.round(done/total*100):0)+"%";
+}
+
+function deadlineItem(row,today){
+  var date=parse(row[0]),id="d:"+row[1],li=el("li");
+  var past=dayDiff(today,date)<0;
+  if(row[5])li.classList.add("isexam");
+  li.appendChild(el("span","when",short(date)));
+  var w=el("div","what");
+  var b=el("b",isDone(id)?"done-txt":null,row[3]);w.appendChild(b);
+  if(row[5])w.appendChild(el("span","tag exam","Exam"));
+  if(past&&!isDone(id)&&!row[5])w.appendChild(el("span","tag late","Not ticked"));
+  var sub=el("div","cls",row[2]+(row[4]?" · "+row[4]:""));w.appendChild(sub);
+  li.appendChild(w);
+  var cb=document.createElement("input");cb.type="checkbox";cb.className="chk";cb.id="cb-"+id.replace(/[^a-z0-9]/gi,"-")+"-"+Math.random().toString(36).slice(2,6);cb.checked=isDone(id);
+  cb.setAttribute("aria-label","Mark done: "+row[3]);
+  cb.addEventListener("change",function(){setCheck(id,cb.checked);});
+  li.appendChild(cb);
+  if(past&&(isDone(id)||row[5]))li.classList.add("past");
+  return li;
+}
+
+function renderDueSoon(){
+  var t=logicalToday(),ul=document.getElementById("dueSoon");ul.textContent="";
+  var rows=DEADLINES.filter(function(r){var dd=dayDiff(t,parse(r[0]));return (dd>=0&&dd<=7)||(dd<0&&!isDone("d:"+r[1])&&!r[5]);});
+  if(!rows.length){var li=el("li");li.appendChild(el("span","when",""));li.appendChild(el("div","what muted","Nothing due this week."));li.appendChild(el("span"));ul.appendChild(li);return;}
+  rows.forEach(function(r){ul.appendChild(deadlineItem(r,t));});
+}
+
+function renderAllDeadlines(){
+  var t=logicalToday(),ul=document.getElementById("allDeadlines");ul.textContent="";
+  DEADLINES.forEach(function(r){ul.appendChild(deadlineItem(r,t));});
+}
+
+function renderWeek(){
+  var t=logicalToday(),ef=examFor(t);
+  if(weekMode===null)weekMode=ef?"exam":"normal";
+  document.getElementById("segNormal").setAttribute("aria-pressed",weekMode==="normal");
+  document.getElementById("segExam").setAttribute("aria-pressed",weekMode==="exam");
+  document.getElementById("weekNote").textContent=weekMode==="exam"?"The 7 days before an exam. Homework due that week goes first, then everything else is exam prep. Homework due the following week was done ahead in normal-week open slots.":"Each assignment has one slot sized to how long it takes. Open slots go to getting ahead on next week's homework.";
+  var D=weekMode==="exam"?EXAMWK:NORMAL,order=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  var g=document.getElementById("weekGrid");g.textContent="";
+  var S=6,E=25,H=15;g.style.gridTemplateRows="auto repeat("+((E-S)*2)+","+H+"px)";
+  g.appendChild(el("div"));
+  order.forEach(function(k,i){var h=el("div","hd"+(DAYKEYS[t.getDay()]===k?" today":""),k);h.style.gridColumn=i+2;h.style.gridRow=1;g.appendChild(h);});
+  for(var x=S;x<E;x+=2){var l=el("div","tm",fmtH(x).replace(":00",""));l.style.gridColumn=1;l.style.gridRow=((x-S)*2+2)+" / span 2";g.appendChild(l);}
+  var tot={};
+  order.forEach(function(k,i){D[k].forEach(function(b){var e=el("div","bk c-"+b[2],b[3]);e.title=fmtRange(b[0],b[1])+": "+b[3];e.style.gridColumn=i+2;e.style.gridRow=((b[0]-S)*2+2)+" / "+((b[1]-S)*2+2);g.appendChild(e);tot[b[2]]=(tot[b[2]]||0)+(b[1]-b[0]);});});
+  var lg=document.getElementById("legend");lg.textContent="";
+  ["qt","class","hw","study","open","ex","church","car","me"].forEach(function(c){if(!tot[c])return;lg.appendChild(el("span","c-"+c,CAT[c]+" · "+(Math.round(tot[c]*2)/2)+" hr"));});
+}
+
+function renderClasses(){
+  var box=document.getElementById("classCards");box.textContent="";
+  CLASSES.forEach(function(c){
+    var card=el("div","card cl");
+    var top=el("div");top.style.display="flex";top.style.justifyContent="space-between";top.style.alignItems="baseline";top.style.gap="8px";
+    var nm=el("div");nm.appendChild(el("h3",null,c.name));nm.appendChild(el("div","label",c.code));top.appendChild(nm);
+    top.appendChild(el("span","now-grade",c.now));card.appendChild(top);
+    card.appendChild(el("span","status "+c.status[1],c.status[0]));
+    var r1=el("div","row");r1.appendChild(el("span",null,"Goal"));r1.appendChild(el("span",null,c.goal));card.appendChild(r1);
+    card.appendChild(el("p","small",c.takes));
+    var lv=el("p","small muted",c.lever);lv.style.margin="0";card.appendChild(lv);
+    box.appendChild(card);
+  });
+}
+
+function stepRange(s){var a=parse(s[0]),b=parse(s[1]);return iso(a)===iso(b)?short(a):short(a)+" to "+short(b);}
+function todaysSteps(t){
+  var out=[];
+  EXAMS.forEach(function(e){(e.steps||[]).forEach(function(s,i){if(dayDiff(parse(s[0]),t)>=0&&dayDiff(t,parse(s[1]))>=0)out.push({e:e,s:s,id:"x:"+e.id+":"+i});});});
+  return out;
+}
+function stepRow(e,s,i,label){
+  var id="x:"+e.id+":"+i,li=el("li","step");
+  var w=el("div","what");w.appendChild(el("b",isDone(id)?"done-txt":null,s[2]));w.appendChild(el("div","cls",(label?label+" \u00b7 ":"")+stepRange(s)));li.appendChild(w);
+  var cb=document.createElement("input");cb.type="checkbox";cb.className="chk";cb.id="cb-"+id.replace(/[^a-z0-9]/gi,"-")+"-"+Math.random().toString(36).slice(2,6);cb.checked=isDone(id);
+  cb.setAttribute("aria-label","Mark done: "+s[2]);cb.addEventListener("change",function(){setCheck(id,cb.checked);});
+  li.appendChild(cb);return li;
+}
+function renderMethods(){
+  var box=document.getElementById("methodCards");box.textContent="";
+  ["dynamics","strength","thermo"].forEach(function(k){
+    var m=METHODS[k],card=el("div","card ex");
+    card.appendChild(el("h3",null,m.cls));
+    card.appendChild(el("div","label","Where exam questions come from, most likely first"));
+    var ol=el("ol","rules small");m.sources.forEach(function(s){ol.appendChild(el("li",null,s));});card.appendChild(ol);
+    card.appendChild(el("div","label","How to study it"));
+    var ol2=el("ol","rules small");m.steps.forEach(function(s){ol2.appendChild(el("li",null,s));});card.appendChild(ol2);
+    var wt=el("p","small muted",m.watch);wt.style.margin="0";card.appendChild(wt);
+    box.appendChild(card);
+  });
+  document.getElementById("promptText").textContent=PRACTICE_PROMPT;
+}
+function renderExams(){
+  var t=logicalToday(),box=document.getElementById("examCards");box.textContent="";
+  EXAMS.forEach(function(e){
+    var dd=dayDiff(t,parse(e.date));
+    var card=el("div","card ex");if(dd<0)card.style.opacity=".55";
+    var top=el("div");top.style.display="flex";top.style.justifyContent="space-between";top.style.gap="10px";top.style.flexWrap="wrap";
+    top.appendChild(el("h3",null,e.cls+": "+e.name));
+    top.appendChild(el("span","mode "+(dd>=0&&dd<=7?"exam":"normal"),dd<0?"Done":dd===0?"Today":dd+(dd===1?" day":" days")));
+    card.appendChild(top);
+    var m=el("div","meta");
+    [["Date",short(parse(e.date))],["Start prep",short(parse(e.prep))],["Saturday blocks",e.sats],["Aim for",e.aim],["Weight",e.weight]].forEach(function(p){var s=el("span");s.appendChild(document.createTextNode(p[0]+": "));s.appendChild(el("b",null,p[1]));m.appendChild(s);});
+    card.appendChild(m);
+    var tp=el("p","small",e.topics);tp.style.margin="4px 0 0";card.appendChild(tp);
+    if(e.method){var mm=el("p","small muted","Method: "+METHODS[e.method].cls+" routine above.");mm.style.margin="0";card.appendChild(mm);}
+    var ul=el("ul","dl");e.steps.forEach(function(s,i){ul.appendChild(stepRow(e,s,i));});card.appendChild(ul);
+    box.appendChild(card);
+  });
+}
+
+function renderSync(){document.getElementById("syncLine").textContent=syncState;}
+
+function render(){renderHeader();renderHero();renderDay();renderDueSoon();renderAllDeadlines();renderWeek();renderClasses();renderMethods();renderExams();renderSync();}
+
+document.getElementById("copyPrompt").addEventListener("click",function(){
+  var msg=document.getElementById("copyMsg");
+  function fallback(){var r=document.createRange();r.selectNodeContents(document.getElementById("promptText"));var s=window.getSelection();s.removeAllRanges();s.addRange(r);msg.textContent="Selected. Copy it from your keyboard menu.";}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(PRACTICE_PROMPT).then(function(){msg.textContent="Copied";},fallback);}else fallback();
+});
+
+/* ---------- Tabs ---------- */
+var TABS=["today","week","deadlines","classes","exams"];
+function showTab(){
+  var h=(location.hash||"#today").slice(1);if(TABS.indexOf(h)<0)h="today";
+  TABS.forEach(function(k){document.getElementById(k).hidden=k!==h;});
+  document.querySelectorAll("nav.tabs a").forEach(function(a){if(a.dataset.tab===h)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",showTab);
+
+document.getElementById("prevDay").addEventListener("click",function(){viewDate=addDays(viewDate,-1);renderDay();});
+document.getElementById("nextDay").addEventListener("click",function(){viewDate=addDays(viewDate,1);renderDay();});
+document.getElementById("segNormal").addEventListener("click",function(){weekMode="normal";renderWeek();});
+document.getElementById("segExam").addEventListener("click",function(){weekMode="exam";renderWeek();});
+
+document.addEventListener("visibilitychange",function(){if(!document.hidden){load();}});
+setInterval(function(){if(!document.hidden)load();},30000);
+setInterval(function(){if(!document.hidden){renderDay();renderHero();}},60000);
+
+showTab();
+checks=lsRead();render();load();
+})();
+</script>
+</body>
+</html>
